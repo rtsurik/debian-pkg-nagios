@@ -1,0 +1,65 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+DEBIAN_DIR := $(shell pwd)/debian
+DEB_TMP_DIR := ${DEBIAN_DIR}/nagios
+
+export DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+export DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+
+# see FEATURE AREAS in dpkg-buildflags(1)
+#export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
+# see ENVIRONMENT in dpkg-buildflags(1)
+# package maintainers to append CFLAGS
+#export DEB_CFLAGS_MAINT_APPEND  = -Wall -pedantic
+# package maintainers to append LDFLAGS
+#export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
+
+
+%:
+	dh $@ --with autotools_dev
+
+
+# dh_make generated override targets
+# This is example for Cmake (See https://bugs.debian.org/641051 )
+#override_dh_auto_configure:
+#	dh_auto_configure -- #	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+		--with-nagios-user=nagios \
+		--with-nagios-group=nagios \
+		--with-command-user=nagios \
+		--with-command-group=nagios \
+		--prefix=/usr \
+		--bindir=/usr/bin \
+		--sbindir=/usr/lib/cgi-bin/nagios \
+		--localstatedir=/var/lib/nagios \
+		--sysconfdir=/etc/nagios \
+		--datadir=/usr/share/nagios/htdocs \
+		--infodir=/usr/share/info \
+		--mandir=/usr/share/man \
+		--libexecdir=/usr/lib/nagios/plugins \
+		--with-httpd-conf=/etc/apache2/conf-available \
+		--with-checkresultdir=/var/spool/nagios/checkresults \
+		--with-lockfile=/var/run/nagios/nagios.pid \
+		--enable-event-broker \
+		--enable-embedded-perl \
+		--with-htmurl=/nagios \
+		--with-cgiurl=/cgi-bin/nagios
+
+override_dh_auto_build:
+	make all
+
+override_dh_auto_test:
+	echo "A lot of Perl tests and lib/test-dkhash.c are broken, so not running any."
+	#make test
+
+override_dh_auto_install:
+	make install install-config DESTDIR=${DEB_TMP_DIR} INSTALL_OPTS="" COMMAND_OPTS=""
+	install -D -m 644 debian/nagios.service ${DEB_TMP_DIR}/lib/systemd/system/nagios.service
+	install -D -m 644 sample-config/httpd.conf ${DEB_TMP_DIR}/etc/apache2/conf-available/nagios.example.conf
+	install -D -m 644 debian/nagios-nginx.conf ${DEB_TMP_DIR}/etc/nginx/sites-available/nagios.example.conf

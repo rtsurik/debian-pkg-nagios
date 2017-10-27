@@ -1,0 +1,53 @@
+Source: nagios
+Section: net
+Priority: optional
+Maintainer: Rustam Tsurik <rustam@tsurik.com>
+Build-Depends: debhelper (>= 9), 
+               autotools-dev,
+               dpkg-dev,
+               libgd-dev,
+               libfreetype6-dev,
+               libpng-dev,
+               zlib1g-dev,
+               libjpeg62-turbo-dev,
+               libperl-dev,
+               unzip
+Standards-Version: 3.9.8
+Homepage: https://www.nagios.org/
+#Vcs-Git: https://anonscm.debian.org/collab-maint/nagios.git
+#Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/nagios.git
+
+Package: nagios
+Architecture: any
+Depends: adduser,
+         bsd-mailx | mailx,
+         coreutils,
+         ${shlibs:Depends},
+         ${misc:Depends}
+Recommends: nginx | apache2,
+          fcgiwrap, 
+          php-fpm | libapache2-mod-php | php-cgi,
+          monitoring-plugins-basic | monitoring-plugins
+Description: Nagios is a monitoring and management system for hosts, services and
+ networks. nagios3-common contains the common files for the nagios3 package.
+ .
+ Nagios' features include:
+ .
+  *  Monitoring of network services (via TCP port, SMTP, POP3, HTTP, NNTP,
+     PING, etc.)
+  *  Plugin interface to allow for user-developed service checks
+  *  Contact notifications when problems occur and get resolved (via email,
+     pager, or user-defined method)
+  *  Ability to define event handlers to be run during service or host events
+     (for proactive problem resolution)
+  *  Web output (current status, notifications, problem history, log file, etc.)
+ .
+ Nagios is designed to be easy to understand and modify to fit your own needs.
+ .
+ This package is the new version 3.x series of nagios, which replaced
+ the 2.x versions.
+ .
+ Nagios is a replacement of the Netsaint project. It accepts and uses the
+ previous Netsaint modules transparently.
+ .
+ Upstream URL: http://www.nagios.org/

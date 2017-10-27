@@ -1,0 +1,6 @@
+nagios 4.x for Debian
+----------------
+
+Nagios Core is a free and open source computer-software monitoring program. This is an initial debianized package.
+
+ -- Rustam Tsurik <rustam@tsurik.com>  Fri, 20 Oct 2017 10:44:05 +0300

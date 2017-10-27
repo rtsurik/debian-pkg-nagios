@@ -1,0 +1,5 @@
+nagios (4.3.4-1) unstable; urgency=medium
+
+  * Initial release
+
+ -- Rustam Tsurik <rustam@tsurik.com>  Fri, 20 Oct 2017 10:44:05 +0300
